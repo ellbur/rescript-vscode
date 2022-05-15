@@ -74,15 +74,24 @@ export let findBscNativeOfFile = (
 export let findNodeBuildOfProjectRoot = (
   projectRootPath: p.DocumentUri
 ): null | { buildPath: p.DocumentUri; isReScript: boolean } => {
-  let rescriptNodePath = path.join(projectRootPath, c.rescriptNodePartialPath);
-  let bsbNodePath = path.join(projectRootPath, c.bsbNodePartialPath);
+  while (true) {
+    let rescriptNodePath = path.join(projectRootPath, c.rescriptNodePartialPath);
+    let bsbNodePath = path.join(projectRootPath, c.bsbNodePartialPath);
 
-  if (fs.existsSync(rescriptNodePath)) {
-    return { buildPath: rescriptNodePath, isReScript: true };
-  } else if (fs.existsSync(bsbNodePath)) {
-    return { buildPath: bsbNodePath, isReScript: false };
+    if (fs.existsSync(rescriptNodePath)) {
+      return { buildPath: rescriptNodePath, isReScript: true };
+    } else if (fs.existsSync(bsbNodePath)) {
+      return { buildPath: bsbNodePath, isReScript: false };
+    } else {
+      let parent = path.dirname(projectRootPath);
+      if (fs.existsSync(parent) && parent != projectRootPath) {
+        projectRootPath = parent;
+      }
+      else {
+        return null;
+      }
+    }
   }
-  return null;
 };
 
 type execResult =
