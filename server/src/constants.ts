@@ -1,18 +1,21 @@
 import * as path from "path";
 
+let archString = process.arch == "arm64" ? "-aarch64" : "";
+let platformString = process.platform + archString;
+
 // See https://microsoft.github.io/language-server-protocol/specification Abstract Message
 // version is fixed to 2.0
 export let jsonrpcVersion = "2.0";
 export let bscNativeReScriptPartialPath = path.join(
   "node_modules",
   "rescript",
-  process.platform,
+  platformString,
   "bsc.exe"
 );
 export let bscNativePartialPath = path.join(
   "node_modules",
   "bs-platform",
-  process.platform,
+  platformString,
   "bsc.exe"
 );
 
@@ -25,7 +28,7 @@ export let analysisDevPath = path.join(
 export let analysisProdPath = path.join(
   path.dirname(__dirname),
   "analysis_binaries",
-  process.platform,
+  platformString,
   "rescript-editor-analysis.exe"
 );
 
